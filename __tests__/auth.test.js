@@ -10,7 +10,7 @@ describe('demo routes', () => {
     return setup(pool);
   });
 
-  it.only('signs up a user via POST', async () => {
+  it('signs up a user via POST', async () => {
     const res = await request(app)
       .post('/api/v1/auth/signup')
       .send({
@@ -23,6 +23,18 @@ describe('demo routes', () => {
       id: '1',
       email: 'test@test.com'
     });
+  });
 
+  it('logs in a user via POST', async () => {
+    const res = await request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        email: 'test@test.com',
+        password: 'password'
+      });
+    expect(res.body).toEqual({
+      email: 'test@test.com',
+      id: '1'
+    });
   });
 });
