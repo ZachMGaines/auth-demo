@@ -88,5 +88,15 @@ describe('demo routes', () => {
     console.log(res.body);
     expect(res.body).toEqual({ ...newGrammey, id: '1', userId: '1' });
   });
+
+  it('deletes an instagram post', async () => {
+    const gram = await Gram.insert({
+      photoUrl: 'https://www.placecage.com/c/200/300',
+      caption: 'Instagram posssstttt',
+      tags: 'new tag'
+    });
+    const res = await agent.delete(`/api/v1/grams/${gram.id}`).send(gram);
+    expect(res.body).toEqual(gram);
+  });
 });
 
