@@ -71,20 +71,22 @@ describe('demo routes', () => {
     const res = await request(app).get('/api/v1/grams');
     expect(res.body).toEqual([gram1, gram2, gram3]);
   });
-});
+  it('updates an instagram post', async () => {
+    const grammey = await Gram.insert({
+      userId: '1',
+      photoUrl: 'https://www.placecage.com/c/200/300',
+      caption: 'This is my first instagram post',
+      tags: 'placecage'
+    });
+    const newGrammey = {
+      photoUrl: 'https://www.placecage.com/c/200/300',
+      caption: 'This is my first instagram post',
+      tags: 'newcage!'
+    };
 
-it('updates an instagram post', async () => {
-  const grammey = await Gram.insert({
-    photoUrl: 'https://www.placecage.com/c/200/300',
-    caption: 'This is my first instagram post',
-    tags: 'placecage'
+    const res = await agent.put(`/api/v1/grams/${grammey.id}`).send(newGrammey);
+    console.log(res.body);
+    expect(res.body).toEqual({ ...newGrammey, id: '1', userId: '1' });
   });
-  const newGrammey = {
-    photoUrl: 'https://www.placecage.com/c/200/300',
-    caption: 'This is my first instagram post',
-    tags: 'placecage'
-  };
-
-  const res = await request(app).put(`/api/v1/grams/${grammey.id}`).send(newGrammey);
-  expect(res.body).toEqual({ ...newGrammey, id: 1 });
 });
+
