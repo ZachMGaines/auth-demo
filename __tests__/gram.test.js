@@ -72,3 +72,19 @@ describe('demo routes', () => {
     expect(res.body).toEqual([gram1, gram2, gram3]);
   });
 });
+
+it('updates an instagram post', async () => {
+  const grammey = await Gram.insert({
+    photoUrl: 'https://www.placecage.com/c/200/300',
+    caption: 'This is my first instagram post',
+    tags: 'placecage'
+  });
+  const newGrammey = {
+    photoUrl: 'https://www.placecage.com/c/200/300',
+    caption: 'This is my first instagram post',
+    tags: 'placecage'
+  };
+
+  const res = await request(app).put(`/api/v1/grams/${grammey.id}`).send(newGrammey);
+  expect(res.body).toEqual({ ...newGrammey, id: 1 });
+});
