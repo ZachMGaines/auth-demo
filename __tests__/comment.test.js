@@ -57,4 +57,22 @@ describe('demo routes', () => {
       userPost: post.id
     });
   });
+
+  it('deletes a comment made by a user', async () => {
+    const post = await Gram.insert({
+      userId: user.id,
+      photoUrl: 'https://www.placecage.com/c/200/300',
+      caption: 'first instagram post',
+      tags: 'placecage'
+    });
+
+    await agent
+      .delete('/api/v1/comments/:id')
+      .send({
+        comment: 'If the juice was worth the squeeze',
+        commentBy: user.id,
+        userPost: post.id
+      });
+  });
+
 });
