@@ -10,6 +10,15 @@ describe('demo routes', () => {
 
   let agent;
   let user;
+  let post;
+
+  const post1 = {
+    photoUrl: 'cat.png',
+    caption: 'my cat',
+    tags: ['#cute', '#cat']
+  };
+
+
   beforeEach(() => {
     return setup(pool);
   });
@@ -20,14 +29,16 @@ describe('demo routes', () => {
       .post('/api/v1/auth/signup')
       .send({
         email: 'test@test.com',
-        password: 'password'
+        password: 'password',
+        profilePhoto: 'BradPitt.com/img22'
       });
 
     const userRes = await agent
       .post('/api/v1/auth/login')
       .send({
         email: 'test@test.com',
-        password: 'password'
+        password: 'password',
+        profilePhoto: 'BradPitt.com/img22'
       });
     user = userRes.body;
 
@@ -59,20 +70,18 @@ describe('demo routes', () => {
   });
 
   it('deletes a comment made by a user', async () => {
-    const post = await Gram.insert({
-      userId: user.id,
-      photoUrl: 'https://www.placecage.com/c/200/300',
-      caption: 'first instagram post',
-      tags: 'placecage'
+    const post = await Gram.insert({ ...post1, userId: user.id });
+    const comment = await Comment.insert({
+      id: '1',
+      comment: 'If the juice was worth the squeeze',
+      commentBy: user.id,
+      userPost: post.id
     });
+    const res = await agent
+      .delete(`/api/v1/comments/${comment.id}`)
+      .send(comment);
 
-    await agent
-      .delete('/api/v1/comments/:id')
-      .send({
-        comment: 'If the juice was worth the squeeze',
-        commentBy: user.id,
-        userPost: post.id
-      });
+    expect(res.body).toEqual(comment);
   });
 
 });
