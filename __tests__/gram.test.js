@@ -85,7 +85,7 @@ describe('demo routes', () => {
     };
 
     const res = await agent.put(`/api/v1/grams/${grammey.id}`).send(newGrammey);
-    console.log(res.body);
+
     expect(res.body).toEqual({ ...newGrammey, id: '1', userId: '1' });
   });
 
@@ -96,6 +96,17 @@ describe('demo routes', () => {
       tags: 'new tag'
     });
     const res = await agent.delete(`/api/v1/grams/${gram.id}`).send(gram);
+    expect(res.body).toEqual(gram);
+  });
+
+  it('finds an instagram post', async () => {
+    const gram = await Gram.insert({
+      photoUrl: 'https://www.placecage.com/c/200/300',
+      caption: 'Instagram posssstttt',
+      tags: 'new tag'
+    });
+
+    const res = await request(app).get(`/api/v1/grams/${gram.id}`);
     expect(res.body).toEqual(gram);
   });
 });
